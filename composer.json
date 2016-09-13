@@ -1,3 +1,11 @@
 {
-    "name": "webcomponents/engine-bundle"
+    "name": "webcomponents/engine-bundle",
+    "type": "bundle",
+    "authors": [
+        {
+            "name": "Nans Pellicari",
+            "email": "nans.pellicari@gmail.com"
+        }
+    ],
+    "require": {}
 }
