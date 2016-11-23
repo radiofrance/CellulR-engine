@@ -1,0 +1,26 @@
+services:
+    rf.wc.engine.twig_extension:
+        class: Rf\WebComponent\EngineBundle\Twig\WebComponentExtension
+        public: false
+        arguments:
+            - "@fragment.handler"
+            - "%kernel.root_dir%"
+            - "%wc.component_dir%"
+            - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
+        tags:
+            - { name: twig.extension }
+    rf.wc.engine.subscriber:
+        class: Rf\WebComponent\EngineBundle\EventSubscriber\ViewObjectSubscriber
+        arguments:
+          - "@twig"
+        tags:
+            - { name: kernel.event_subscriber }
+    rf.wc.engine.component_loader:
+        class: Rf\WebComponent\EngineBundle\Routing\ComponentLoader
+        public: false
+        arguments:
+            - "@sensio_framework_extra.routing.loader.annot_dir"
+            - "%wc.component_dir%"
+            - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
+        tags:
+            - { name: routing.loader }
