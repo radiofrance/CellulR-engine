@@ -93,6 +93,17 @@ L'appel d'un Web Component se fait :
 
 - Grâce à son URL d'accès si celui-ci a définit une route dans sa View Object.
 
+Web Component as ESI
+--------------------
+
+Pour permettre a un composant de se comporter comme un **bloc ESI**, il suffit de l'appeler comme suit : 
+
+```
+{{ web_component('Image', {arg1: 'a value'}, {strategy: 'esi'}) }}
+```
+
+Le 3ème paramètre permet de passer des options à la fonction de rendu du composant. Grâce à l'option `strategy` avec la valeur `esi`, le composant sera rendu en tant que **bloc ESI**.
+
 Voir aussi
 -----------
 

@@ -7,6 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Rf\WebComponent\EngineBundle\ViewObject\Response as VOResponse;
 
 /**
  * Class ViewObjectSubscriber.
@@ -50,7 +51,7 @@ class ViewObjectSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $controller = $request->attributes->get('_controller');
 
-        $path = str_replace('\\', '/', preg_replace("#(?:.*?)[ViewObject|WebComponent]\\\\(.*?)\:(?:.*)#", "$1", $controller));
+        $path = str_replace('\\', '/', preg_replace("#(?:.*?)[ViewObject|WebComponent]\\\\(.*?)\:(?:.*)#", '$1', $controller));
 
         if (preg_match('#(/[^/]*)$#', $path, $name)) {
             $name = $name[1];
@@ -59,13 +60,29 @@ class ViewObjectSubscriber implements EventSubscriberInterface
         $path = preg_replace('#(/[^/]*)$#', '', $path);
         $name = $this->fromCamelCase(isset($name) ? $name : $path);
 
-        $event->setResponse(
-            new Response(
-                $this->twig->render(
-                    sprintf('@wc/%s/%s.html.twig', $path, $name),
-                    $event->getControllerResult()
-                )
+        $result = $data = $event->getControllerResult();
+
+        if ($result instanceof VOResponse) {
+            $data = $result->getData();
+        }
+
+        $response = new Response(
+            $this->twig->render(
+                sprintf('@wc/%s/%s.html.twig', $path, $name),
+                $data
             )
         );
+
+        if ($result instanceof VOResponse) {
+            $this->applyCacheDirective($response, $result);
+        }
+
+        $event->setResponse($response);
+    }
+
+    protected function applyCacheDirective(Response $response, VOResponse $voResponse)
+    {
+        $response->setMaxAge($voResponse->getMaxAge());
+        $response->setSharedMaxAge($voResponse->getSharedMaxAge());
     }
 }

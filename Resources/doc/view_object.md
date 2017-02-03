@@ -46,7 +46,9 @@ class Image
      */
     public function __invoke()
     {
-        return array();
+        // 2 types de réponses sont également possibles.
+        // Voir le chapitre "Response" plus bas.
+        return array(); 
     }
 }
 ```
@@ -138,6 +140,38 @@ class Image
     }
 }
 ```
+
+Response
+--------
+
+Un ViewObject peut fonctionner comme un bloc ESI (voir chapitre **["Web Component as ESI"](./web_component.md)** ).
+Pour pouvoir gérer les durées de cache de ces blocs (et même surcharger les TTL de cache d'une page), on peut utiliser un objet **Response** :
+
+```php
+<?php
+// src/ViewObject/Component/Image/Image.php
+ 
+namespace ViewObject\Component\Image;
+
+use Rf\WebComponent\EngineBundle\ViewObject\Response;
+
+/**
+ * Class Image.
+ */
+class Image
+{
+    /**
+     * @return Response With the array of data for the view & specific data for cache directive
+     */
+    public function __invoke()
+    {
+        // 2nd paramètre = max-age (en sec.)
+        // 3ème paramètre = s-maxage (en sec.)
+        return new Response(['variable1' => 'value 1'], 600, 600); 
+    }
+}
+```
+
 Voir aussi
 -----------
 
