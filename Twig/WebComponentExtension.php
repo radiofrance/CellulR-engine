@@ -3,6 +3,7 @@
 namespace Rf\WebComponent\EngineBundle\Twig;
 
 use Rf\WebComponent\EngineBundle\Utils\UtilsTrait;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -37,6 +38,16 @@ class WebComponentExtension extends \Twig_Extension
     private $viewObjectDir;
 
     /**
+     * @var string
+     */
+    private $configCachePath;
+
+    /**
+     * @var array|null
+     */
+    private $config;
+
+    /**
      * ViewObjectExtension Constructor.
      *
      * @param FragmentHandler $handler       A FragmentHandler instance
@@ -44,12 +55,13 @@ class WebComponentExtension extends \Twig_Extension
      * @param string          $wcDir
      * @param string          $viewObjectDir
      */
-    public function __construct(FragmentHandler $handler, $kernelRootDir, $wcDir, $viewObjectDir)
+    public function __construct(FragmentHandler $handler, $kernelRootDir, $wcDir, $viewObjectDir, $configCachePath)
     {
         $this->handler = $handler;
         $this->kernelRootDir = $kernelRootDir;
         $this->wcDir = $wcDir;
         $this->viewObjectDir = $viewObjectDir;
+        $this->configCachePath = $configCachePath;
     }
 
     /**
@@ -78,17 +90,12 @@ class WebComponentExtension extends \Twig_Extension
         $strategy = isset($options['strategy']) ? $options['strategy'] : 'inline';
         unset($options['strategy']);
 
-        $files = $this->getViewObjectFile($name);
-        if (0 === $files->count()) {
+        $file = $this->getViewObjectFile($name);
+        if ($file === null) {
             throw new \Exception(sprintf('The view object file with the name \'%s\' was not found.', $name));
         }
 
-        foreach ($files as $file) {
-            $filename = preg_replace('/(.*)\.php$/', '$1', str_replace('/', '\\', $file->getFilename()));
-            $namespace = $this->getNamespaceFromDir($this->kernelRootDir, $file->getPath());
-        }
-
-        return $this->handler->render(new ControllerReference(sprintf('%s\\%s::__invoke', $namespace, $filename), $attributes), $strategy, $options);
+        return $this->handler->render(new ControllerReference(sprintf('%s\\%s::__invoke', $file['namespace'], $file['filename']), $attributes), $strategy, $options);
     }
 
     /**
@@ -96,21 +103,64 @@ class WebComponentExtension extends \Twig_Extension
      *
      * @param $name
      *
-     * @return Finder|\Symfony\Component\Finder\SplFileInfo[]
+     * @return array
      */
     public function getViewObjectFile($name)
     {
-        $finder = new Finder();
+        $config = $this->getConfigViewObject();
 
-        if (!empty($this->viewObjectDir)) {
-            $files = $finder->in(array($this->viewObjectDir))->files()->name(sprintf('%s.php', $name));
-
-            if (0 < $files->count()) {
-                return $files;
-            }
+        if (isset($config[$name])) {
+            return $config[$name];
         }
 
-        return $finder->in(array($this->wcDir))->files()->name(sprintf('%s.php', $name));
+        return;
+    }
+
+    private function getConfigViewObject()
+    {
+        if ($this->config === null && file_exists($this->configCachePath)) {
+            $this->config = (array) require $this->configCachePath;
+        }
+
+        if (is_array($this->config)) {
+            return $this->config;
+        }
+
+        $config = [];
+        $this->findViewObjectFiles($config, $this->wcDir);
+        $this->findViewObjectFiles($config, $this->viewObjectDir);
+
+        $cache = new ConfigCache($this->configCachePath, true);
+
+        $code = '<?php
+return '.var_export($config, true).'
+;';
+        $cache->write($code);
+
+        return $config;
+    }
+
+    private function findViewObjectFiles(&$config, $folderPath)
+    {
+        $finder = new Finder();
+        $directories = $finder->depth('< 2')->in(array($folderPath))->directories();
+
+        $finderFile = new Finder();
+        $files = [];
+
+        foreach ($directories as $viewObjectName) {
+            $name = $viewObjectName->getBasename();
+            $files = $finderFile->in(array($viewObjectName->getRealPath()))->files()->name($name.'.php');
+        }
+
+        foreach ($files as $file) {
+            $name = $file->getBasename('.'.$file->getExtension());
+
+            $filename = preg_replace('/(.*)\.php$/', '$1', str_replace('/', '\\', $file->getFilename()));
+            $namespace = $this->getNamespaceFromDir(realpath($this->kernelRootDir.'/../src'), $file->getPath());
+
+            $config[$name] = ['namespace' => $namespace, 'filename' => $filename];
+        }
     }
 
     /**

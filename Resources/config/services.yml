@@ -7,6 +7,7 @@ services:
             - "%kernel.root_dir%"
             - "%wc.component_dir%"
             - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
+            - "%kernel.root_dir%/cache/%kernel.environment%/ViewObjectCache.php"
         tags:
             - { name: twig.extension }
     rf.wc.engine.subscriber:

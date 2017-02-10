@@ -29,7 +29,7 @@ trait UtilsTrait
     }
 
     /**
-     * Get the namespace given its directory
+     * Get the namespace given its directory.
      *
      * @param string $rootDir
      * @param string $viewObjectDir
@@ -39,7 +39,7 @@ trait UtilsTrait
     public function getNamespaceFromDir($rootDir, $dir)
     {
         return trim(str_replace(
-            array($rootDir.'/../src', '/'),
+            array($rootDir, '/'),
             array('', '\\'),
             $dir
         ), '\\');
