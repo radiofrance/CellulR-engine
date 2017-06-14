@@ -1,0 +1,6 @@
+{
+    "name": "Teaser",
+    "type": "component",
+    "description": "Set a description of the Teaser component",
+    "require": {}
+}

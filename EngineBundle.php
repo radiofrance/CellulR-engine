@@ -3,6 +3,7 @@
 namespace Rf\WebComponent\EngineBundle;
 
 use Rf\WebComponent\EngineBundle\DependencyInjection\Compiler\AddTwigPathsPass;
+use Rf\WebComponent\EngineBundle\DependencyInjection\Compiler\AddViewObjectInCollectionService;
 use Rf\WebComponent\EngineBundle\DependencyInjection\EngineExtension;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,6 +24,7 @@ class EngineBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new AddTwigPathsPass(), PassConfig::TYPE_OPTIMIZE);
+        $container->addCompilerPass(new AddViewObjectInCollectionService(), PassConfig::TYPE_OPTIMIZE);
     }
 
     /**
@@ -36,5 +38,4 @@ class EngineBundle extends Bundle
 
         return $this->extension;
     }
-
 }

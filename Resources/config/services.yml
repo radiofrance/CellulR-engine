@@ -1,21 +1,36 @@
 services:
+    rf.wc.engine.vo_container:
+        class: Rf\WebComponent\EngineBundle\ViewObject\Collection
+
+    rf.wc.engine.finder:
+        class: Rf\WebComponent\EngineBundle\Finder\Finder
+        public: false
+        arguments:
+            - "%wc.root_dir%"
+            - "%wc.component_dir%"
+            - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
+            - "%kernel.root_dir%/cache/%kernel.environment%/ViewObjectAndWebComponentCache.php"
+            - "@rf.wc.engine.vo_container"
+
     rf.wc.engine.twig_extension:
         class: Rf\WebComponent\EngineBundle\Twig\WebComponentExtension
         public: false
         arguments:
+            - "@rf.wc.engine.vo_container"
+            - "@controller_resolver"
             - "@fragment.handler"
-            - "%kernel.root_dir%"
-            - "%wc.component_dir%"
-            - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
-            - "%kernel.root_dir%/cache/%kernel.environment%/ViewObjectCache.php"
+            - "@rf.wc.engine.finder"
         tags:
             - { name: twig.extension }
+
     rf.wc.engine.subscriber:
         class: Rf\WebComponent\EngineBundle\EventSubscriber\ViewObjectSubscriber
         arguments:
           - "@twig"
+          - "@rf.wc.engine.finder"
         tags:
             - { name: kernel.event_subscriber }
+
     rf.wc.engine.component_loader:
         class: Rf\WebComponent\EngineBundle\Routing\ComponentLoader
         public: false

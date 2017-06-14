@@ -2,7 +2,6 @@
 
 namespace Rf\WebComponent\EngineBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -26,13 +25,13 @@ class EngineExtension extends Extension implements PrependExtensionInterface
         $kernelRootDir = $container->getParameter('kernel.root_dir');
 
         $rootDir = $container->getParameterBag()->resolveValue($config['root_dir']);
-        $rootDirPrefix = $kernelRootDir.'/../src';
-        $rootDirSuffix = trim(str_replace($rootDirPrefix, '', $rootDir), DIRECTORY_SEPARATOR);
 
-        $rootDir = $rootDirPrefix.(!empty($rootDirSuffix) ? DIRECTORY_SEPARATOR.$rootDirSuffix : "");
-
-        if (false === realpath($rootDir) || 0 !== strpos(realpath($rootDir), realpath($rootDirPrefix))) {
+        if (false === realpath($rootDir)) {
             throw new \Exception(sprintf('Usage of non existing directory "%s" in the configuration "root_dir" of "wc_engine".', $config['root_dir']));
+        }
+
+        if (false === realpath($rootDir.'/WebComponent')) {
+            throw new \Exception(sprintf('Directory "%s/WebComponent" not exists".', $rootDir));
         }
 
         // Init directories parameters
@@ -55,7 +54,6 @@ class EngineExtension extends Extension implements PrependExtensionInterface
         $this->prependAction($container, $directories);
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -66,7 +64,7 @@ class EngineExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * Pre-set the DunglasActionBundle
+     * Pre-set the DunglasActionBundle.
      *
      * @param ContainerBuilder $container
      * @param array            $directories

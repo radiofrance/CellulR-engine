@@ -1,2 +1,4 @@
 /vendor/
 /composer.lock
+/Tests/mocked-app/cache/test/*
+!/Tests/mocked-app/cache/test/

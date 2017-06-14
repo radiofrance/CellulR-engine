@@ -2,6 +2,8 @@
 
 namespace Rf\WebComponent\EngineBundle\EventSubscriber;
 
+use Rf\WebComponent\EngineBundle\Finder\Finder;
+use Rf\WebComponent\EngineBundle\Resolver\ViewObjectResponseResolver;
 use Rf\WebComponent\EngineBundle\Utils\UtilsTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,15 +24,21 @@ class ViewObjectSubscriber implements EventSubscriberInterface
      * @var \Twig_Environment
      */
     private $twig;
+    /**
+     * @var Finder
+     */
+    private $finder;
 
     /**
      * ViewObjectSubscriber constructor.
      *
      * @param \Twig_Environment $twig
+     * @param Finder            $finder
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Twig_Environment $twig, Finder $finder)
     {
         $this->twig = $twig;
+        $this->finder = $finder;
     }
 
     /**
@@ -49,29 +57,20 @@ class ViewObjectSubscriber implements EventSubscriberInterface
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
-        $controller = $request->attributes->get('_controller');
-
-        $path = str_replace('\\', '/', preg_replace("#(?:.*?)[ViewObject|WebComponent]\\\\(.*?)\:(?:.*)#", '$1', $controller));
-
-        if (preg_match('#(/[^/]*)$#', $path, $name)) {
-            $name = $name[1];
-        }
-
-        $path = preg_replace('#(/[^/]*)$#', '', $path);
-        $name = $this->fromCamelCase(isset($name) ? $name : $path);
-
         $result = $data = $event->getControllerResult();
 
-        if ($result instanceof VOResponse) {
-            $data = $result->getData();
+        $webComponent = $request->attributes->get('_webcomponent');
+
+        if ($webComponent === null) {
+            $controller = $request->attributes->get('_controller');
+            // This to retrieve only the ShortName of the controller class:
+            $lastSeparatorPosition = strrpos($controller, '\\') + 1;
+            $webComponent = substr($controller, $lastSeparatorPosition, strpos($controller, ':') - $lastSeparatorPosition);
         }
 
-        $response = new Response(
-            $this->twig->render(
-                sprintf('@wc/%s/%s.html.twig', $path, $name),
-                $data
-            )
-        );
+        $webComponentData = $this->finder->getData($webComponent, Finder::WEB_COMPONENT);
+
+        $response = (new ViewObjectResponseResolver($this->twig))->resolve($webComponentData, $result);
 
         if ($result instanceof VOResponse) {
             $this->applyCacheDirective($response, $result);

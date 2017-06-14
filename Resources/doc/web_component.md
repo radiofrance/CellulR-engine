@@ -61,7 +61,7 @@ Le fichier de dépendances
 Chaque Web Component doit possèder un fichier de dépendance et de définition `component.json`.
 Ce fichier permet de relier les assets des Web Components entre eux et de les prendre en compte lors de la compilation.
 
-Voici l'exemple du Web Component `Image` de type `Component` 
+Voici l'exemple du Web Component `Image` de type `Component`
 
 ```json
 {
@@ -96,13 +96,22 @@ L'appel d'un Web Component se fait :
 Web Component as ESI
 --------------------
 
-Pour permettre a un composant de se comporter comme un **bloc ESI**, il suffit de l'appeler comme suit : 
+Pour permettre a un composant de se comporter comme un **bloc ESI**, il suffit de l'appeler comme suit :
 
 ```
 {{ web_component('Image', {arg1: 'a value'}, {strategy: 'esi'}) }}
 ```
 
 Le 3ème paramètre permet de passer des options à la fonction de rendu du composant. Grâce à l'option `strategy` avec la valeur `esi`, le composant sera rendu en tant que **bloc ESI**.
+
+Utilisation d'une View Object différente
+----------------------------------------
+
+Pour appeler un composant, on peut également utiliser une View Object différente afin de fournir au Web Component composant des **datas** différentes.
+
+```
+{{ web_component('Image', {arg1: 'a value'}, {vo: 'AnotherImageVO'}) }}
+```
 
 Voir aussi
 -----------

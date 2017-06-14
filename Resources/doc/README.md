@@ -94,3 +94,13 @@ Vous pouvez vous référer aux documentations suivantes pour créer votre premie
 - [Le Web Component](web_component.md)
 - [La View Object](view_object.md)
 - [Les paths Twig](paths_twig.md)
+
+
+### Charts
+
+Pour mieux comprendre les rouages du système, référez vous au charts suivants:
+ 
+ - [Finder](chart_finder.md)
+ - [Cas simple d'utilisation de la fonction "web_component"](chart_web_component_simple_usecase.md)
+ - [Cas d'utilisation de la fonction "web_component" pour une "subrequest"](chart_web_component_subrequest_usecase.md)
+ 

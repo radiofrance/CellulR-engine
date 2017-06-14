@@ -1,0 +1,3 @@
+engine_bundle:
+    resource: '.'
+    type: component

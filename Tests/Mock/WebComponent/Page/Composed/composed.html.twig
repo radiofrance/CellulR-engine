@@ -1,0 +1,16 @@
+{% spaceless %}
+    <!DOCTYPE html>
+    <html lang="fr">
+        <head>
+        </head>
+        <body>
+            <header>
+                <h1>{{ title }}</h1>
+            </header>
+            <main>
+                {{ web_component('Teaser', { title: 'Teaser basic' }) }}
+                {{ web_component('Teaser', { title: 'Teaser alternative' }, { vo: 'TeaserAlt' }) }}
+            </main>
+        </body>
+    </html>
+{% endspaceless %}
