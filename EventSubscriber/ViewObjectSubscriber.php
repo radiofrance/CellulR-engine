@@ -64,8 +64,7 @@ class ViewObjectSubscriber implements EventSubscriberInterface
         if ($webComponent === null) {
             $controller = $request->attributes->get('_controller');
             // This to retrieve only the ShortName of the controller class:
-            $lastSeparatorPosition = strrpos($controller, '\\') + 1;
-            $webComponent = substr($controller, $lastSeparatorPosition, strpos($controller, ':') - $lastSeparatorPosition);
+            $webComponent = preg_replace('#.*\\\\([^\\\\]*?)(::__invoke)?$#', '$1', $controller);
         }
 
         $webComponentData = $this->finder->getData($webComponent, Finder::WEB_COMPONENT);
