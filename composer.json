@@ -1,8 +1,8 @@
 {
     "name": "webcomponents/engine-bundle",
     "type": "symfony-bundle",
-    "description": "Engine for web components v3.0",
-    "keywords": ["webcomponent", "symfony-bundle"],
+    "description": "Engine for cellulR",
+    "keywords": ["cellulR", "symfony-bundle"],
     "license": "proprietary",
     "authors": [
         {
@@ -29,7 +29,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Rf\\WebComponent\\EngineBundle\\": ""
+            "Rf\\CellulR\\EngineBundle\\": ""
         }
     }
 }

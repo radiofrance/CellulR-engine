@@ -1,23 +1,23 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Tests\Mock\ViewObject\Page\Simple;
+namespace Rf\CellulR\EngineBundle\Tests\Mock\CoreObject\Page\Composed;
 
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class Simple.
+ * Class Composed.
  */
-class Simple
+class Composed
 {
     /**
-     * @Route("/simple", name="simple_page_test")
+     * @Route("/composed", name="composed_page_test")
      *
      * @return array The array of data
      */
     public function __invoke()
     {
         return array(
-            'title' => 'simple page',
+            'title' => 'composed page',
         );
     }
 }

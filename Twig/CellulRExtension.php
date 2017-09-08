@@ -1,22 +1,23 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Twig;
+namespace Rf\CellulR\EngineBundle\Twig;
 
-use Rf\WebComponent\EngineBundle\Resolver\ViewObjectResponseResolver;
-use Rf\WebComponent\EngineBundle\Finder\Finder;
-use Rf\WebComponent\EngineBundle\ViewObject\Collection;
+use Rf\CellulR\EngineBundle\Resolver\CoreObjectResponseResolver;
+use Rf\CellulR\EngineBundle\Finder\Finder;
+use Rf\CellulR\EngineBundle\CoreObject\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Twig_Environment;
 
 /**
- * Class WebComponentExtension.
+ * Class CellulRExtension.
  *
  * @author Yoan Guillemin <yoann.guillemin@radiofrance.com>
  */
-class WebComponentExtension extends \Twig_Extension
+class CellulRExtension extends \Twig_Extension
 {
     /**
      * @var FragmentHandler
@@ -39,12 +40,12 @@ class WebComponentExtension extends \Twig_Extension
     private $controllerResolver;
 
     /**
-     * ViewObjectExtension Constructor.
+     * CoreObjectExtension Constructor.
      *
      * @param FragmentHandler $handler       A FragmentHandler instance
      * @param string          $kernelRootDir
-     * @param string          $wcDir
-     * @param string          $viewObjectDir
+     * @param string          $cellulrDir
+     * @param string          $coreObjectDir
      */
     public function __construct(Collection $collection, ControllerResolver $controllerResolver, FragmentHandler $handler, Finder $finder)
     {
@@ -60,7 +61,7 @@ class WebComponentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('web_component', array($this, 'webComponent'), array('is_safe' => array('html'), 'needs_environment' => true)),
+            new \Twig_SimpleFunction('cell', array($this, 'cell'), array('is_safe' => array('html'), 'needs_environment' => true)),
         );
     }
 
@@ -73,30 +74,30 @@ class WebComponentExtension extends \Twig_Extension
      *
      * @return null|string
      *
-     * @throws \Exception When a view object file was not found
+     * @throws \Exception When a core object file was not found
      */
-    public function webComponent(\Twig_Environment $env, $name, $attributes = array(), $options = array())
+    public function cell(\Twig_Environment $env, $name, $attributes = array(), $options = array())
     {
-        $wcName = $name;
+        $cellName = $name;
         $strategy = isset($options['strategy']) ? $options['strategy'] : 'inline';
         unset($options['strategy']);
 
-        if (isset($options['vo'])) {
-            $name = $options['vo'];
+        if (isset($options['co'])) {
+            $name = $options['co'];
         }
 
-        $file = $this->finder->getData($name, Finder::VIEW_OBJECT);
+        $file = $this->finder->getData($name, Finder::CORE_OBJECT);
         if ($file === null) {
-            throw new \Exception(sprintf('The view object file with the name \'%s\' was not found.', $name));
+            throw new \Exception(sprintf('The core object file with the name \'%s\' was not found.', $name));
         }
 
-        $wcFile = $this->finder->getData($wcName, Finder::WEB_COMPONENT);
-        if ($wcFile === null) {
-            throw new \Exception(sprintf('The web component file with the name \'%s\' was not found.', $wcName));
+        $cellFile = $this->finder->getData($cellName, Finder::CELL);
+        if ($cellFile === null) {
+            throw new \Exception(sprintf('The cell file with the name \'%s\' was not found.', $cellName));
         }
 
         if ($strategy === 'inline') {
-            $controller = $this->collection->getViewObjects(strtolower(sprintf('%s\\%s', $file['namespace'], $file['filename'])));
+            $controller = $this->collection->getCoreObjects(strtolower(sprintf('%s\\%s', $file['namespace'], $file['filename'])));
 
             $request = new Request([], [], $attributes);
             $arguments = $this->controllerResolver->getArguments($request, $controller);
@@ -106,12 +107,12 @@ class WebComponentExtension extends \Twig_Extension
                 return $data->getContent();
             }
 
-            $response = (new ViewObjectResponseResolver($env))->resolve($wcFile, $result);
+            $response = (new CoreObjectResponseResolver($env))->resolve($cellFile, $result);
 
             return $response->getContent();
         }
 
-        $attributes = array_merge($attributes, ['_webcomponent' => $wcFile['filename']]);
+        $attributes = array_merge($attributes, ['_cell' => $cellFile['filename']]);
 
         return $this->handler->render(new ControllerReference(sprintf('%s\\%s::__invoke', $file['namespace'], $file['filename']), $attributes), $strategy, $options);
     }
@@ -121,6 +122,6 @@ class WebComponentExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'web_component';
+        return 'cell';
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Utils;
+namespace Rf\CellulR\EngineBundle\Utils;
 
 /**
  * Class UtilsTrait.
@@ -32,7 +32,7 @@ trait UtilsTrait
      * Get the namespace given its directory.
      *
      * @param string $rootDir
-     * @param string $viewObjectDir
+     * @param string $coreObjectDir
      *
      * @return string
      */

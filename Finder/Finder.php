@@ -1,29 +1,29 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Finder;
+namespace Rf\CellulR\EngineBundle\Finder;
 
-use Rf\WebComponent\EngineBundle\ViewObject\Collection;
+use Rf\CellulR\EngineBundle\CoreObject\Collection;
 use Symfony\Component\Config\ConfigCache;
 
 class Finder
 {
-    const WEB_COMPONENT = 'wc';
-    const VIEW_OBJECT = 'vo';
+    const CELL = 'cell';
+    const CORE_OBJECT = 'co';
 
     /**
      * @var string
      */
-    private $wcRootDir;
+    private $cellRootDir;
 
     /**
      * @var string
      */
-    private $wcDir;
+    private $cellDir;
 
     /**
      * @var string
      */
-    private $viewObjectDir;
+    private $coreObjectDir;
 
     /**
      * @var string
@@ -43,17 +43,17 @@ class Finder
     /**
      * Config constructor.
      *
-     * @param string     $wcRootDir
-     * @param string     $wcDir
-     * @param string     $viewObjectDir
+     * @param string     $cellRootDir
+     * @param string     $cellDir
+     * @param string     $coreObjectDir
      * @param string     $configCachePath
      * @param Collection $collection
      */
-    public function __construct($wcRootDir, $wcDir, $viewObjectDir, $configCachePath, Collection $collection)
+    public function __construct($cellRootDir, $cellDir, $coreObjectDir, $configCachePath, Collection $collection)
     {
-        $this->wcRootDir = $wcRootDir;
-        $this->wcDir = $wcDir;
-        $this->viewObjectDir = $viewObjectDir;
+        $this->cellRootDir = $cellRootDir;
+        $this->cellDir = $cellDir;
+        $this->coreObjectDir = $coreObjectDir;
         $this->configCachePath = $configCachePath;
         $this->collection = $collection;
     }
@@ -66,7 +66,7 @@ class Finder
      *
      * @return array
      */
-    public function getData($name, $type = self::VIEW_OBJECT)
+    public function getData($name, $type = self::CORE_OBJECT)
     {
         $config = $this->getConfig();
 
@@ -102,38 +102,38 @@ return '.var_export($config, true).'
 
     private function findFiles(&$config)
     {
-        $webComponentPath = realPath($this->wcDir);
-        $viewObjectPath = realPath($this->viewObjectDir);
+        $cellPath = realPath($this->cellDir);
+        $coreObjectPath = realPath($this->coreObjectDir);
 
         $voCollection = $this->collection->all();
         foreach ($voCollection as $voName => $vo) {
             $reflector = new \ReflectionClass($vo);
             $fullDirname = dirname($reflector->getFileName());
-            $dirname = str_replace(realpath($this->wcRootDir).'/', '', $fullDirname);
+            $dirname = str_replace(realpath($this->cellRootDir).'/', '', $fullDirname);
             $name = $reflector->getShortName();
             $namespace = $reflector->getNamespaceName();
 
             if (!isset($config[$name])) {
-                $config[$name] = [self::VIEW_OBJECT => [], self::WEB_COMPONENT => []];
+                $config[$name] = [self::CORE_OBJECT => [], self::CELL => []];
             }
 
-            if (strpos($fullDirname, $webComponentPath) !== false) {
-                $config[$name][self::WEB_COMPONENT] = ['namespace' => $namespace, 'filename' => $name, 'dirname' => $dirname];
+            if (strpos($fullDirname, $cellPath) !== false) {
+                $config[$name][self::CELL] = ['namespace' => $namespace, 'filename' => $name, 'dirname' => $dirname];
             }
 
-            if (strpos($fullDirname, $webComponentPath) !== false
-                && empty($config[$name][self::VIEW_OBJECT])) {
-                $config[$name][self::VIEW_OBJECT] = ['namespace' => $namespace, 'filename' => $name, 'dirname' => $dirname];
+            if (strpos($fullDirname, $cellPath) !== false
+                && empty($config[$name][self::CORE_OBJECT])) {
+                $config[$name][self::CORE_OBJECT] = ['namespace' => $namespace, 'filename' => $name, 'dirname' => $dirname];
             }
 
-            if (strpos($fullDirname, $viewObjectPath) !== false) {
-                $config[$name][self::VIEW_OBJECT] = ['namespace' => $namespace, 'filename' => $name, 'dirname' => $dirname];
+            if (strpos($fullDirname, $coreObjectPath) !== false) {
+                $config[$name][self::CORE_OBJECT] = ['namespace' => $namespace, 'filename' => $name, 'dirname' => $dirname];
             }
 
-            if (strpos($fullDirname, $viewObjectPath) !== false
-                && empty($config[$name][self::WEB_COMPONENT])) {
-                $dirname = str_replace([$viewObjectPath, realpath($this->wcRootDir).'/'], [$webComponentPath, ''], $fullDirname);
-                $config[$name][self::WEB_COMPONENT] = ['filename' => $name, 'dirname' => $dirname];
+            if (strpos($fullDirname, $coreObjectPath) !== false
+                && empty($config[$name][self::CELL])) {
+                $dirname = str_replace([$coreObjectPath, realpath($this->cellRootDir).'/'], [$cellPath, ''], $fullDirname);
+                $config[$name][self::CELL] = ['filename' => $name, 'dirname' => $dirname];
             }
         }
     }

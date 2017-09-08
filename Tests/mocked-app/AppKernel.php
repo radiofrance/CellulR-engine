@@ -3,7 +3,7 @@
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-class WebComponentEngineAppKernel extends Kernel
+class CellEngineAppKernel extends Kernel
 {
     public function registerBundles()
     {
@@ -12,7 +12,7 @@ class WebComponentEngineAppKernel extends Kernel
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Dunglas\ActionBundle\DunglasActionBundle(),
-            new Rf\WebComponent\EngineBundle\EngineBundle(),
+            new Rf\CellulR\EngineBundle\EngineBundle(),
         ];
     }
 
@@ -23,6 +23,6 @@ class WebComponentEngineAppKernel extends Kernel
 
     public function getName()
     {
-        return 'webcomponentengineapptest';
+        return 'cellengineapptest';
     }
 }

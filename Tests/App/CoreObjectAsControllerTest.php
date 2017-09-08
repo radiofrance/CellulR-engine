@@ -1,10 +1,10 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Tests\App;
+namespace Rf\CellulR\EngineBundle\Tests\App;
 
-use Rf\WebComponent\EngineBundle\Tests\WebTestCase;
+use Rf\CellulR\EngineBundle\Tests\WebTestCase;
 
-class ViewObjectAsControllerTest extends WebTestCase
+class CoreObjectAsControllerTest extends WebTestCase
 {
     public function testASimplePageMustReturnsItsContent()
     {
@@ -16,7 +16,7 @@ class ViewObjectAsControllerTest extends WebTestCase
         );
     }
 
-    public function testAComposedPageMustReturnsItsContentAndWebComponentContentWith()
+    public function testAComposedPageMustReturnsItsContentAndCellContentWith()
     {
         $client = $this->container->get('test.client');
         $client->request('GET', '/composed');

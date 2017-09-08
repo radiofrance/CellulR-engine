@@ -23,5 +23,5 @@ twig:
     paths:
         '%kernel.root_dir%/': base
 
-wc_engine:
+cellulr_engine:
     root_dir: "%kernel.root_dir%/../Mock"

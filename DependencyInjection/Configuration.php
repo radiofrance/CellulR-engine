@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\DependencyInjection;
+namespace Rf\CellulR\EngineBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,10 +18,10 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('wc_engine')
+        $treeBuilder->root('cellulr_engine')
             ->children()
                 ->scalarNode('root_dir')
-                ->info('The web component root directory. Relative to %kernel.root_dir%/../src')
+                ->info('The cellulR root directory. Relative to %kernel.root_dir%/../src')
                 ->defaultValue('%kernel.root_dir%/../src')
             ->end()
         ;

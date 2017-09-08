@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Rf\WebComponent\EngineBundle\Routing;
+namespace Rf\CellulR\EngineBundle\Routing;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -33,21 +33,21 @@ class ComponentLoader implements LoaderInterface
     /**
      * @var string
      */
-    private $viewObjectDir;
+    private $coreObjectDir;
 
     /**
      * RequestListener constructor.
      *
      * @param AnnotationDirectoryLoader $loader
      * @param string                    $componentDir
-     * @param string                    $viewObjectDir
+     * @param string                    $coreObjectDir
      */
-    public function __construct(AnnotationDirectoryLoader $loader, $componentDir, $viewObjectDir)
+    public function __construct(AnnotationDirectoryLoader $loader, $componentDir, $coreObjectDir)
     {
         $this->loaded = false;
         $this->loader = $loader;
         $this->componentDir = $componentDir;
-        $this->viewObjectDir = $viewObjectDir;
+        $this->coreObjectDir = $coreObjectDir;
     }
 
     /**
@@ -61,8 +61,8 @@ class ComponentLoader implements LoaderInterface
 
         $paths[] = $this->componentDir;
 
-        if (!empty($this->viewObjectDir)) {
-            $paths[] = $this->viewObjectDir;
+        if (!empty($this->coreObjectDir)) {
+            $paths[] = $this->coreObjectDir;
         }
 
         $collection = new RouteCollection();

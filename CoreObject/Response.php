@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\ViewObject;
+namespace Rf\CellulR\EngineBundle\CoreObject;
 
 class Response
 {

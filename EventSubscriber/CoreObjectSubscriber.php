@@ -1,22 +1,22 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\EventSubscriber;
+namespace Rf\CellulR\EngineBundle\EventSubscriber;
 
-use Rf\WebComponent\EngineBundle\Finder\Finder;
-use Rf\WebComponent\EngineBundle\Resolver\ViewObjectResponseResolver;
-use Rf\WebComponent\EngineBundle\Utils\UtilsTrait;
+use Rf\CellulR\EngineBundle\Finder\Finder;
+use Rf\CellulR\EngineBundle\Resolver\CoreObjectResponseResolver;
+use Rf\CellulR\EngineBundle\Utils\UtilsTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Rf\WebComponent\EngineBundle\ViewObject\Response as VOResponse;
+use Rf\CellulR\EngineBundle\CoreObject\Response as COResponse;
 
 /**
- * Class ViewObjectSubscriber.
+ * Class CoreObjectSubscriber.
  *
  * @author Yoan Guillemin <yoann.guillemin@radiofrance.com>
  */
-class ViewObjectSubscriber implements EventSubscriberInterface
+class CoreObjectSubscriber implements EventSubscriberInterface
 {
     use UtilsTrait;
 
@@ -30,7 +30,7 @@ class ViewObjectSubscriber implements EventSubscriberInterface
     private $finder;
 
     /**
-     * ViewObjectSubscriber constructor.
+     * CoreObjectSubscriber constructor.
      *
      * @param \Twig_Environment $twig
      * @param Finder            $finder
@@ -59,26 +59,26 @@ class ViewObjectSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $result = $data = $event->getControllerResult();
 
-        $webComponent = $request->attributes->get('_webcomponent');
+        $cell = $request->attributes->get('_cell');
 
-        if ($webComponent === null) {
+        if ($cell === null) {
             $controller = $request->attributes->get('_controller');
             // This to retrieve only the ShortName of the controller class:
-            $webComponent = preg_replace('#.*\\\\([^\\\\]*?)(::__invoke)?$#', '$1', $controller);
+            $cell = preg_replace('#.*\\\\([^\\\\]*?)(::__invoke)?$#', '$1', $controller);
         }
 
-        $webComponentData = $this->finder->getData($webComponent, Finder::WEB_COMPONENT);
+        $cellData = $this->finder->getData($cell, Finder::CELL);
 
-        $response = (new ViewObjectResponseResolver($this->twig))->resolve($webComponentData, $result);
+        $response = (new CoreObjectResponseResolver($this->twig))->resolve($cellData, $result);
 
-        if ($result instanceof VOResponse) {
+        if ($result instanceof COResponse) {
             $this->applyCacheDirective($response, $result);
         }
 
         $event->setResponse($response);
     }
 
-    protected function applyCacheDirective(Response $response, VOResponse $voResponse)
+    protected function applyCacheDirective(Response $response, COResponse $voResponse)
     {
         $response->setMaxAge($voResponse->getMaxAge());
         $response->setSharedMaxAge($voResponse->getSharedMaxAge());

@@ -1,12 +1,12 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Tests\App;
+namespace Rf\CellulR\EngineBundle\Tests\App;
 
-use Rf\WebComponent\EngineBundle\Tests\WebTestCase;
+use Rf\CellulR\EngineBundle\Tests\WebTestCase;
 
 class TemplateCallsTest extends WebTestCase
 {
-    public function testWebcomponentCallsInTemplateShouldReturnsItsTemplateContent()
+    public function testCellCallsInTemplateShouldReturnsItsTemplateContent()
     {
         $twig = $this->container->get('twig');
         $html = $twig->render(sprintf('@base/templates/%s.html.twig', lcfirst(substr(__FUNCTION__, 4))));
@@ -16,7 +16,7 @@ class TemplateCallsTest extends WebTestCase
         );
     }
 
-    public function testViewObjectAlternativeCallsInTemplateShouldOverrideContent()
+    public function testCoreObjectAlternativeCallsInTemplateShouldOverrideContent()
     {
         $twig = $this->container->get('twig');
         $html = $twig->render(sprintf('@base/templates/%s.html.twig', lcfirst(substr(__FUNCTION__, 4))));

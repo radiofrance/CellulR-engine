@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\DependencyInjection\Compiler;
+namespace Rf\CellulR\EngineBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -24,22 +24,22 @@ class AddTwigPathsPass implements CompilerPassInterface
         // Inject paths for twig
         $twigFilesystemLoaderDefinition = $container->getDefinition('twig.loader.filesystem');
 
-        if (!$container->hasParameter('wc.component_dir')) {
+        if (!$container->hasParameter('cellulr.component_dir')) {
             return;
         }
 
-        $componentDir = $container->getParameterBag()->resolveValue('%wc.component_dir%');
+        $componentDir = $container->getParameterBag()->resolveValue('%cellulr.component_dir%');
 
         if (is_dir($componentDir)) {
-            $twigFilesystemLoaderDefinition->addMethodCall('addPath', array($componentDir, 'wc'));
+            $twigFilesystemLoaderDefinition->addMethodCall('addPath', array($componentDir, 'cellulr'));
         }
 
         if (is_dir($componentDir.'/Page')) {
-            $twigFilesystemLoaderDefinition->addMethodCall('addPath', array("$componentDir/Page", 'wc_page'));
+            $twigFilesystemLoaderDefinition->addMethodCall('addPath', array("$componentDir/Page", 'cellulr_page'));
         }
 
         if (is_dir($componentDir.'/Component')) {
-            $twigFilesystemLoaderDefinition->addMethodCall('addPath', array("$componentDir/Component", 'wc_component'));
+            $twigFilesystemLoaderDefinition->addMethodCall('addPath', array("$componentDir/Component", 'cellulr_component'));
         }
     }
 

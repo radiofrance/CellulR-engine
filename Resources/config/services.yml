@@ -1,42 +1,42 @@
 services:
-    rf.wc.engine.vo_container:
-        class: Rf\WebComponent\EngineBundle\ViewObject\Collection
+    rf.cellulr.engine.co_container:
+        class: Rf\CellulR\EngineBundle\CoreObject\Collection
 
-    rf.wc.engine.finder:
-        class: Rf\WebComponent\EngineBundle\Finder\Finder
+    rf.cellulr.engine.finder:
+        class: Rf\CellulR\EngineBundle\Finder\Finder
         public: false
         arguments:
-            - "%wc.root_dir%"
-            - "%wc.component_dir%"
-            - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
-            - "%kernel.root_dir%/cache/%kernel.environment%/ViewObjectAndWebComponentCache.php"
-            - "@rf.wc.engine.vo_container"
+            - "%cellulr.root_dir%"
+            - "%cellulr.component_dir%"
+            - "@=container.hasParameter('cellulr.core_object_dir') ? parameter('cellulr.core_object_dir') : ''"
+            - "%kernel.root_dir%/cache/%kernel.environment%/CoreObjectAndCellCache.php"
+            - "@rf.cellulr.engine.co_container"
 
-    rf.wc.engine.twig_extension:
-        class: Rf\WebComponent\EngineBundle\Twig\WebComponentExtension
+    rf.cellulr.engine.twig_extension:
+        class: Rf\CellulR\EngineBundle\Twig\CellulRExtension
         public: false
         arguments:
-            - "@rf.wc.engine.vo_container"
+            - "@rf.cellulr.engine.co_container"
             - "@controller_resolver"
             - "@fragment.handler"
-            - "@rf.wc.engine.finder"
+            - "@rf.cellulr.engine.finder"
         tags:
             - { name: twig.extension }
 
-    rf.wc.engine.subscriber:
-        class: Rf\WebComponent\EngineBundle\EventSubscriber\ViewObjectSubscriber
+    rf.cellulr.engine.subscriber:
+        class: Rf\CellulR\EngineBundle\EventSubscriber\CoreObjectSubscriber
         arguments:
           - "@twig"
-          - "@rf.wc.engine.finder"
+          - "@rf.cellulr.engine.finder"
         tags:
             - { name: kernel.event_subscriber }
 
-    rf.wc.engine.component_loader:
-        class: Rf\WebComponent\EngineBundle\Routing\ComponentLoader
+    rf.cellulr.engine.component_loader:
+        class: Rf\CellulR\EngineBundle\Routing\ComponentLoader
         public: false
         arguments:
             - "@sensio_framework_extra.routing.loader.annot_dir"
-            - "%wc.component_dir%"
-            - "@=container.hasParameter('wc.view_object_dir') ? parameter('wc.view_object_dir') : ''"
+            - "%cellulr.component_dir%"
+            - "@=container.hasParameter('cellulr.core_object_dir') ? parameter('cellulr.core_object_dir') : ''"
         tags:
             - { name: routing.loader }

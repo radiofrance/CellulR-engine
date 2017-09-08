@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Tests\Mock\WebComponent\Component\Teaser;
+namespace Rf\CellulR\EngineBundle\Tests\Mock\Cell\Component\Teaser;
 
 /**
  * Class Teaser.

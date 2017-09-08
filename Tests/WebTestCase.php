@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\Tests;
+namespace Rf\CellulR\EngineBundle\Tests;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as Mother;
@@ -19,7 +19,7 @@ abstract class WebTestCase extends Mother
         AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
         require_once __DIR__.'/mocked-app/AppKernel.php';
-        static::$kernel = new \WebComponentEngineAppKernel('test', true);
+        static::$kernel = new \CellEngineAppKernel('test', true);
         static::$kernel->boot();
         $this->container = static::$kernel->getContainer();
     }

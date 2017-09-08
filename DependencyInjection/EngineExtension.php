@@ -1,6 +1,6 @@
 <?php
 
-namespace Rf\WebComponent\EngineBundle\DependencyInjection;
+namespace Rf\CellulR\EngineBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -27,27 +27,27 @@ class EngineExtension extends Extension implements PrependExtensionInterface
         $rootDir = $container->getParameterBag()->resolveValue($config['root_dir']);
 
         if (false === realpath($rootDir)) {
-            throw new \Exception(sprintf('Usage of non existing directory "%s" in the configuration "root_dir" of "wc_engine".', $config['root_dir']));
+            throw new \Exception(sprintf('Usage of non existing directory "%s" in the configuration "root_dir" of "cellulr_engine".', $config['root_dir']));
         }
 
-        if (false === realpath($rootDir.'/WebComponent')) {
-            throw new \Exception(sprintf('Directory "%s/WebComponent" not exists".', $rootDir));
+        if (false === realpath($rootDir.'/Cell')) {
+            throw new \Exception(sprintf('Directory "%s/Cell" not exists".', $rootDir));
         }
 
         // Init directories parameters
-        $container->setParameter('wc.root_dir', $rootDir);
-        $container->setParameter('wc.component_dir', $rootDir.'/WebComponent');
+        $container->setParameter('cellulr.root_dir', $rootDir);
+        $container->setParameter('cellulr.component_dir', $rootDir.'/Cell');
 
         $relativeResource = trim(str_replace($kernelRootDir, '', $rootDir), DIRECTORY_SEPARATOR);
 
         // Add View Object route
-        $directories[] = $relativeResource.'/WebComponent';
+        $directories[] = $relativeResource.'/Cell';
 
         // Add View Object route (override)
-        if (is_dir($viewObjectDir = $rootDir.'/ViewObject')) {
-            $container->setParameter('wc.view_object_dir', $viewObjectDir);
+        if (is_dir($coreObjectDir = $rootDir.'/CoreObject')) {
+            $container->setParameter('cellulr.core_object_dir', $coreObjectDir);
 
-            $directories[] = $relativeResource.'/ViewObject';
+            $directories[] = $relativeResource.'/CoreObject';
         }
 
         // Pre-set the DunglasActionBundle
@@ -83,6 +83,6 @@ class EngineExtension extends Extension implements PrependExtensionInterface
      */
     public function getAlias()
     {
-        return 'wc_engine';
+        return 'cellulr_engine';
     }
 }

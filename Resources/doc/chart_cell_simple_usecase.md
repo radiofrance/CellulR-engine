@@ -1,33 +1,33 @@
 ```
 +--------------+          +-----------------------+              +--------+          +----------------------------+
-|     View     |          | WebComponentExtension |              | Finder |          | ViewObjectResponseResolver |
+|     View     |          | CellulRExtension |              | Finder |          | CoreObjectResponseResolver |
 |     (tpl)    |          |   (twig extension)    |              |        |          |                            |
 +------+-------+          +-----------+-----------+              +---+----+          +-------------+--------------+
        |                              |                              |                             |
        |                              |                              |                             |
        |                              |                              |                             |
        |                              |                              |                             |
-       |    use of "web_component"    |                              |                             |
+       |    use of "cell"    |                              |                             |
        |    function                  |                              |                             |
        +------------------------------>                              |                             |
        |                              |                              |                             |
        |                              |                              |                             |
-       |                              |   ask for ViewObject data    |                             |
+       |                              |   ask for CoreObject data    |                             |
        |                              +------------------------------>                             |
        |                              <------------------------------+                             |
        |                              |                              |                             |
        |                              |                              |                             |
-       |                              |  ask for WebComponent data   |                             |
+       |                              |  ask for Cell data   |                             |
        |                              +------------------------------>                             |
        |                              <------------------------------+                             |
        |                              |                              |                             |
        |                              |                              |                             |
        |                 +------------+-------------+                |                             |
-       |                 | Call VO to retrieve data |                |                             |
+       |                 | Call CO to retrieve data |                |                             |
        |                 +------------+-------------+                |                             |
        |                              |                              |                             |
        |                              |                              -                             |
-       |                              |                   Send VO data & WC data                   |
+       |                              |                   Send CO data & WC data                   |
        |                              +------------------------------+----------------------------->
        |                              |                              |                +---------------------------+
        |                              |                              |                | Create response with twig |
