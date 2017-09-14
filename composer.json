@@ -3,15 +3,15 @@
     "type": "symfony-bundle",
     "description": "Engine for CellulR",
     "keywords": ["CellulR", "symfony-bundle"],
-    "license": "proprietary",
+    "license": "CECILL-B",
     "authors": [
         {
             "name": "Nans Pellicari",
             "email": "nans.pellicari@gmail.com"
         },
         {
-            "name": "Yoan Guillemin",
-            "email": "yoann.guillemin@radiofrance.com"
+            "name": "Radio France",
+            "email": "opensource@radiofrance.com"
         }
     ],
     "require": {
