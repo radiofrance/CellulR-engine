@@ -1,8 +1,8 @@
 {
-    "name": "webcomponents/engine-bundle",
+    "name": "radiofrance/cellulr-engine",
     "type": "symfony-bundle",
-    "description": "Engine for cellulR",
-    "keywords": ["cellulR", "symfony-bundle"],
+    "description": "Engine for CellulR",
+    "keywords": ["CellulR", "symfony-bundle"],
     "license": "proprietary",
     "authors": [
         {
