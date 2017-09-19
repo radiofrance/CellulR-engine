@@ -14,16 +14,16 @@ class AddCoreObjectInCollectionService implements CompilerPassInterface
     {
         $definitions = $container->getDefinitions();
         $voDefinitions = $container->getDefinition('rf.cellulr.engine.co_container');
-
         foreach ($definitions as $definitionName => $definition) {
-            if (strpos($definitionName, 'cell\\page') === false
-                && strpos($definitionName, 'cell\\component') === false
-                && strpos($definitionName, 'coreobject\\page') === false
-                && strpos($definitionName, 'coreobject\\component') === false) {
+            $name = mb_strtolower($definitionName);
+            if (strpos($name, 'cell\\page') === false
+                && strpos($name, 'cell\\component') === false
+                && strpos($name, 'coreobject\\page') === false
+                && strpos($name, 'coreobject\\component') === false) {
                 continue;
             }
 
-            $voDefinitions->addMethodCall('addCoreObject', [$definitionName, $definition]);
+            $voDefinitions->addMethodCall('addCoreObject', [$name, $definition]);
         }
     }
 }

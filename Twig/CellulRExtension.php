@@ -2,13 +2,13 @@
 
 namespace Rf\CellulR\EngineBundle\Twig;
 
-use Rf\CellulR\EngineBundle\Resolver\CoreObjectResponseResolver;
-use Rf\CellulR\EngineBundle\Finder\Finder;
 use Rf\CellulR\EngineBundle\CoreObject\Collection;
+use Rf\CellulR\EngineBundle\Finder\Finder;
+use Rf\CellulR\EngineBundle\Resolver\CoreObjectResponseResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig_Environment;
 
@@ -47,8 +47,12 @@ class CellulRExtension extends \Twig_Extension
      * @param string          $cellulrDir
      * @param string          $coreObjectDir
      */
-    public function __construct(Collection $collection, ControllerResolver $controllerResolver, FragmentHandler $handler, Finder $finder)
-    {
+    public function __construct(
+        Collection $collection,
+        ControllerResolverInterface $controllerResolver,
+        FragmentHandler $handler,
+        Finder $finder
+    ) {
         $this->collection = $collection;
         $this->controllerResolver = $controllerResolver;
         $this->handler = $handler;
