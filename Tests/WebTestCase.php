@@ -15,10 +15,8 @@ abstract class WebTestCase extends Mother
 
     protected function setUp()
     {
-        $loader = require __DIR__.'/../../../autoload.php';
-        AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+        parent::setUp();
 
-        require_once __DIR__.'/mocked-app/AppKernel.php';
         static::$kernel = new \CellEngineAppKernel('test', true);
         static::$kernel->boot();
         $this->container = static::$kernel->getContainer();
