@@ -36,6 +36,21 @@ class AppKernel extends Kernel
 }
 ```
 
+et il faut modifier le ```composer.json``` pour avoir l'autoload des Cell :
+
+```
+    "autoload": {
+        "psr-4": {
+            "AppBundle\\": "src/AppBundle",
+            "Cell\\": "src/Cell"
+        },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
+    },
+```
+
 Configurer le bundle
 --------------------
 
@@ -99,8 +114,8 @@ Vous pouvez vous référer aux documentations suivantes pour créer votre premi�
 ### Charts
 
 Pour mieux comprendre les rouages du système, référez vous au charts suivants:
- 
+
  - [Finder](chart_finder.md)
  - [Cas simple d'utilisation de la fonction "cell"](chart_cell_simple_usecase.md)
  - [Cas d'utilisation de la fonction "cell" pour une "subrequest"](chart_cell_subrequest_usecase.md)
- 
+
