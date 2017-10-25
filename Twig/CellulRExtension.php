@@ -7,6 +7,7 @@ use Rf\CellulR\EngineBundle\Finder\Finder;
 use Rf\CellulR\EngineBundle\Resolver\CoreObjectResponseResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -37,11 +38,11 @@ class CellulRExtension extends \Twig_Extension
     /**
      * @var ControllerResolver
      */
-    private $controllerResolver;
+    private $argumentResolver;
 
     /**
      * CoreObjectExtension Constructor.
-     *
+      *
      * @param FragmentHandler $handler       A FragmentHandler instance
      * @param string          $kernelRootDir
      * @param string          $cellulrDir
@@ -49,12 +50,12 @@ class CellulRExtension extends \Twig_Extension
      */
     public function __construct(
         Collection $collection,
-        ControllerResolverInterface $controllerResolver,
+        ArgumentResolverInterface $argumentResolver,
         FragmentHandler $handler,
         Finder $finder
     ) {
         $this->collection = $collection;
-        $this->controllerResolver = $controllerResolver;
+        $this->argumentResolver = $argumentResolver;
         $this->handler = $handler;
         $this->finder = $finder;
     }
@@ -104,7 +105,7 @@ class CellulRExtension extends \Twig_Extension
             $controller = $this->collection->getCoreObjects(strtolower(sprintf('%s\\%s', $file['namespace'], $file['filename'])));
 
             $request = new Request([], [], $attributes);
-            $arguments = $this->controllerResolver->getArguments($request, $controller);
+            $arguments = $this->argumentResolver->getArguments($request, $controller);
             $result = $data = call_user_func_array($controller, $arguments);
 
             if ($result instanceof Response) {

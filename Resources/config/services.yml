@@ -17,7 +17,7 @@ services:
         public: false
         arguments:
             - "@rf.cellulr.engine.co_container"
-            - "@controller_resolver"
+            - "@argument_resolver"
             - "@fragment.handler"
             - "@rf.cellulr.engine.finder"
         tags:
