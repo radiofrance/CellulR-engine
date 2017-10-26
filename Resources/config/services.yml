@@ -40,3 +40,21 @@ services:
             - "@=container.hasParameter('cellulr.core_object_dir') ? parameter('cellulr.core_object_dir') : ''"
         tags:
             - { name: routing.loader }
+
+    rf.cellulr.engine.react_renderer_extension:
+        class: Limenius\ReactRenderer\Twig\ReactRenderExtension
+        arguments: ['@rf.cellulr.engine.react_renderer', '@rf.cellulr.engine.context_provider', '%cellulr_engine.default_rendering%', '%cellulr_engine.trace%']
+        tags:
+            - { name: twig.extension }
+
+    rf.cellulr.engine.context_provider:
+        class: Limenius\ReactRenderer\Context\SymfonyContextProvider
+        arguments: ['@request_stack']
+
+    rf.cellulr.engine.external_react_renderer:
+        class: Limenius\ReactRenderer\Renderer\ExternalServerReactRenderer
+        arguments: ['unix://%kernel.root_dir%/Resources/node-server/node.sock', '%cellulr_engine.fail_loud%', '@rf.cellulr.engine.context_provider', '@logger']
+
+    rf.cellulr.engine.phpexecjs_react_renderer:
+        class: Limenius\ReactRenderer\Renderer\PhpExecJsReactRenderer
+        arguments: ['%kernel.root_dir%/Resources/webpack/server-bundle.js', '%cellulr_engine.fail_loud%', '@rf.cellulr.engine.context_provider', '@logger']
