@@ -55,7 +55,7 @@ services:
         arguments: ['@request_stack']
 
     rf.cellulr.engine.external_react_renderer:
-        class: Limenius\ReactRenderer\Renderer\ExternalServerReactRenderer
+        class: Rf\CellulR\EngineBundle\Renderer\ExternalServerReactRenderer
         arguments: ['unix://%kernel.root_dir%/Resources/node-server/node.sock', '%cellulr_engine.fail_loud%', '@rf.cellulr.engine.context_provider', '@rf.cellulr.engine.logger']
 
     rf.cellulr.engine.phpexecjs_react_renderer:
